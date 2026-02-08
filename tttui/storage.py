@@ -68,7 +68,7 @@ def load_items(item_type, language):
     dir_path = config.LANGUAGES_DIR if item_type == "words" else config.QUOTES_DIR
     file_path = os.path.join(dir_path, f"{language}.txt")
     try:
-        with open(file_path, "r", encoding="utf-8") as f:
+        with open(file_path, "r", encoding="utf-8-sig") as f:
             items = [line.strip() for line in f if line.strip()]
         return items if items else [f"No {item_type} found for {language}"]
     except FileNotFoundError:
