@@ -96,6 +96,8 @@ def main(stdscr):
                 stdscr.nodelay(False)
                 continue
 
+            game.update_current_line(test_state)
+
             ui.display_test_ui(stdscr, test_state)
             key_code = stdscr.getch()
             if key_code == -1:

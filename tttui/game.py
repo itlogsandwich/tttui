@@ -80,3 +80,16 @@ def calculate_results(state, personal_best):
         "char_stats": char_stats,
         "is_new_pb": is_new_pb,
     }
+
+def update_current_line(test_state):
+    curr_len = len(test_state["current_text"])
+    lines = test_state["lines"]
+    cumulative_len = 0
+
+    for idx,line in enumerate(lines):
+        cumulative_len += len(line) + 1
+        if curr_len < cumulative_len:
+            test_state["current_line_idx"] = idx
+            return
+
+    test_state["current_line_idx"] = len(lines) - 1
