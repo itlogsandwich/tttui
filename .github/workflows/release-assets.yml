@@ -62,6 +62,7 @@ jobs:
     needs: build
     env:
       GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
       RELEASE_TAG: ${{ inputs.tag }}
     steps:
       - uses: actions/download-artifact@v4
