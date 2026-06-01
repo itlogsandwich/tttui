@@ -33,7 +33,7 @@ Before using the workflow, create a crates.io API token and add it to the GitHub
 CARGO_REGISTRY_TOKEN
 ```
 
-The workflow publishes `tttui_core` first, waits for it to become visible on crates.io, then publishes `tttui`.
+The workflow builds Linux, macOS, and Windows release archives, publishes `tttui_core` first, waits for it to become visible on crates.io, then publishes `tttui`. After publishing succeeds, it creates a GitHub Release for the tag and attaches the binary archives.
 
 ## Manual Preflight
 
