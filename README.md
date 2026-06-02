@@ -1,174 +1,160 @@
-# tttui: A Terminal Typing Test
+# tttui
 
-**A fast, lightweight, and feature-rich typing test that runs directly in your terminal.**
+`tttui` is a minimal terminal typing test written in Rust. It keeps the interface compact: choose your settings from the home menu, move to `start`, and type.
 
-Inspired by the minimalist design of Monkeytype, `tttui` provides a clean, distraction-free environment to practice your typing, track your progress, and race against your personal bests.
-
-![tttui Showcase GIF](https://github.com/user-attachments/assets/58cb0964-1311-4c72-aa04-a76eee20173f)
-
----
+<img width="1092" height="614" alt="tttui-rust-rewrite-demo" src="https://github.com/user-attachments/assets/02bf6d52-bdf5-4c65-a80a-7dc5ad69ed8f" />
 
 ## Features
 
-- **Multiple Test Modes:**
-  - **Time:** Type for 15, 30, 60, or 120 seconds.
-  - **Words:** Complete 10, 25, 50, or 100 words.
-  - **Quote:** Type out a famous quote.
-- **High-Fidelity WPM Graph:** A detailed, high-resolution WPM graph rendered beautifully with Unicode Braille.
-- **Personal Best Tracking:** Automatically saves and compares your best score for every test configuration.
-- **Detailed Performance Stats:** Get a clean breakdown of your Net WPM, Raw WPM, accuracy, consistency, and character stats.
-- **Customization:**
-  - **Themes:** Choose from built-in themes or easily create your own.
-  - **Languages:** Add new wordlists simply by creating new text files.
-- **Persistent Configuration:** Your theme, language, and personal bests are saved locally for a consistent experience.
-- **Minimalist, Keyboard-Driven UI:** Stay focused on typing with a clean, efficient interface.
+- Time, words, punctuation, numbers, and quote modes
+- Compact selector-first home screen
+- Configurable key sequences
+- User-editable TOML themes with color and presentation overrides
+- Bundled and user-provided languages / quotes
+- Personal best tracking
+- Bounded recent session history
+- Result stats and WPM graph
+- Layout that remains usable at `80x24`
 
----
+## Runing and Installation
 
-## Showcase
-
-<details>
-<summary>Click to see more screenshots</summary>
-
-#### Typing Interface
-
-https://github.com/user-attachments/assets/7af94392-fe44-4bfa-91f0-76f3f410ca1c
-
-#### Results Screen
-
-_After each test, you get a detailed breakdown of your performance and a beautiful WPM graph. New records are celebrated!_
-![Results Screen](https://github.com/user-attachments/assets/08469162-aa20-407d-b178-2742f428f0ac)
-
-</details>
-
----
-
-## Installation
-
-`tttui` is designed for a simple and fast setup.
-
-### Recommended Method: PyPI (pip)
-
-The easiest way to install `tttui` is with `pip`.
+Since this is published to crates.io, install globally with:
 
 ```sh
-pip install tttui
-```
-
-Then, run the application:
-
-```sh
+cargo install tttui
 tttui
 ```
 
-_(If the command isn't found, you may need to add Python's `bin` directory to your system's `PATH` or run `python -m tttui` instead.)_
+Run from a source checkout:
 
 ```sh
-python -m tttui
+cargo run --bin tttui
 ```
 
-<br>
+## Controls
 
-<details>
-<summary><b>Alternative: Manual Installation from GitHub</b></summary>
+Default bindings:
 
-#### 1. Clone the Repository
+- `Tab` / `Shift+Tab` / `Up` / `Down`: move focus on the home screen
+- `1` / `2` / `3` / `4` / `5`: jump to mode, length, language, theme, or start
+- `Enter`: open a picker, confirm a picker choice, start from the `start` row, or retry
+- `Up` / `Down`: move inside an open picker
+- `Esc`: close an open picker
+- `q`: quit
+- `Tab Enter`: restart during a test
+- `Tab m`: return to the menu during a test
 
-```sh
-git clone https://github.com/reidoboss/tttui.git
-cd tttui
+All bindings are configurable in the app config file.
+
+## Configuration
+
+On Unix-like systems, the app follows the XDG config path: `$XDG_CONFIG_HOME/tttui/` when `XDG_CONFIG_HOME` is set, otherwise `~/.config/tttui/`. On Windows, it uses `%APPDATA%\tttui\` by default. The app creates its config directory on first launch:
+
+```text
+~/.config/tttui/
+├── config.toml
+├── languages/
+├── quotes/
+└── themes/
 ```
 
-#### 2. Make the Script Executable
+Example `config.toml`:
 
-```sh
-chmod +x bin/tttui.sh
+```toml
+[defaults]
+mode = "time"
+duration = 30
+word_count = 25
+language = "english"
+theme = "default"
+
+[options]
+durations = [15, 30, 60, 120]
+word_counts = [10, 25, 50, 100]
+history_limit = 20
+
+[keybindings]
+quit = ["q"]
+start = ["enter"]
+focus_next = ["tab", "down"]
+focus_previous = ["shift+tab", "up"]
+cycle_next = ["right", "l"]
+cycle_previous = ["left", "h"]
+picker_next = ["down", "j"]
+picker_previous = ["up", "k"]
+focus_mode = ["1"]
+focus_length = ["2"]
+focus_language = ["3"]
+focus_theme = ["4"]
+focus_start = ["5"]
+restart = ["tab enter"]
+menu = ["tab m"]
+history = ["g"]
+cancel = ["esc"]
+backspace = ["backspace"]
 ```
 
-#### 3. Run the Application
+Keybindings support multi-key sequences such as `"tab enter"` and modified keys such as `"ctrl+r"`.
 
-```sh
-./bin/tttui.sh
+Supported modes are `time`, `words`, `punctuation`, `numbers`, and `quote`. The word-count selector is reused by `words`, `punctuation`, and `numbers`.
+
+Press `g` from the home screen to open recent history. Completed runs are kept newest-first in `config.toml`, bounded by `history_limit`.
+
+## Themes
+
+Place custom themes in `~/.config/tttui/themes/<name>.toml`. Built-in themes are `default`, `nord`, and `catppuccin-mocha`.
+
+Example theme:
+
+```toml
+[colors]
+text = "#cdd6f4"
+muted = "#6c7086"
+correct = "#a6e3a1"
+incorrect = "#f38ba8"
+untyped = "#7f849c"
+caret = "#f9e2af"
+accent = "#89b4fa"
+background = "default"
+selection = "#45475a"
+
+[presentation]
+show_borders = false
+border_style = "plain"
 ```
 
-#### 4. (Optional) Install System-Wide
+Supported colors:
 
-To run `tttui` from any directory, move the script to a location in your `PATH`.
+- Named terminal colors such as `"green"` or `"lightcyan"`
+- 256-color indexes such as `"151"`
+- Hex RGB values such as `"#a6e3a1"`
+- `"default"` for the terminal default background
 
-```sh
-sudo mv bin/tttui.sh /usr/local/bin/tttui
+Theme presentation currently supports optional graph borders and selectable border styles without recompiling.
+
+For the full configuration reference, see [`docs/configuration.md`](docs/configuration.md).
+
+## Custom content
+
+Add word lists and quote files here:
+
+```text
+~/.config/tttui/languages/<language>.txt
+~/.config/tttui/quotes/<language>.txt
 ```
 
-Now you can launch the app by just typing `tttui` in your terminal.
+Each file uses one word or quote per line. User files override bundled files with the same name.
 
-</details>
+## Workspace
 
----
-
-## Usage
-
-Control `tttui` entirely with your keyboard:
-
-- **Navigation:** Use `UP`/`DOWN` arrows or `K`/`J` to move through menus.
-- **Select:** Press `ENTER` to confirm a selection.
-- **Go Back:** Press `TAB` to return to the main menu from any sub-menu.
-- **In-Test Options:** During a test, press `TAB` to access the command bar to **reset** the test or return to the **menu**.
-- **Quit:** Press `q` from the main menu or results screen to exit.
-
----
-
-## Customization
-
-You can easily add your own themes and languages.
-
-### Adding a Theme
-
-1.  Open the `tttui/config.py` file.
-2.  Add a new theme dictionary to the `THEMES` object. You can use color names (e.g., `"red"`) or 256-color codes (e.g., `196`). Use `-1` for a transparent background.
-
-    ```python
-    "my_cool_theme": {
-        "text_correct": ("green", -1),      # (foreground, background)
-        "text_incorrect": ("red", -1),
-        "text_untyped": (244, -1),
-        "caret": ("black", "white"),
-        "menu_highlight": ("black", "cyan"),
-        "menu_title": ("cyan", -1),
-    },
-    ```
-
-3.  Launch `tttui` and select your new theme from the **theme** menu.
-
-### Adding a Language or Wordlist
-
-1.  Locate the `tttui` installation directory. Inside, you will find `languages` and `quotes` folders.
-2.  Add a new `.txt` file (e.g., `german.txt`) to the desired folder.
-3.  The file should contain one word per line.
-4.  The new language will automatically appear in the **language** menu in the app.
-
----
-
-## Project Structure
-
-```
-tttui/
-├── bin/
-│   └── tttui.sh          # Main executable launch script
-├── tttui/
-│   ├── languages/        # Wordlists for different languages
-│   ├── quotes/           # Quote files for quote mode
-│   ├── __init__.py       # Main application loop and state management
-│   ├── __main__.py       # Entry point for `python -m tttui`
-│   ├── config.py         # Default themes and directory paths
-│   ├── game.py           # Core typing test logic and result calculations
-│   ├── menu.py           # Menu navigation and rendering
-│   ├── storage.py        # Handles loading/saving configs and PBs
-│   └── ui.py             # All rendering logic (menus, test screen, results)
-└── README.md
+```text
+crates/
+├── tttui_core/
+│   └── shared kernel types and errors
+└── tttui_app/
+    ├── config/
+    ├── features/preferences/
+    └── features/typing_test/
 ```
 
----
-
-## 📄 License
-
-This project is licensed under the **MIT License**.
+The code follows feature boundaries where they carry real responsibility, without adding empty layers only to satisfy a directory pattern.
