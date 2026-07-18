@@ -756,7 +756,7 @@ fn render_home(frame: &mut Frame, area: Rect, home: &HomeState, theme: &Resolved
     }
 
     frame.render_widget(
-        Paragraph::new("1-5 focus   tab/up/down move   enter open/select   q quit")
+        Paragraph::new("1-5 focus   tab/arrows/jk move   enter open/select   q quit")
             .alignment(Alignment::Center)
             .style(Style::default().fg(theme.muted)),
         sections[3],
