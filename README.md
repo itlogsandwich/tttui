@@ -35,7 +35,7 @@ cargo run --bin tttui
 
 Default bindings:
 
-- `Tab` / `Shift+Tab` / `Up` / `Down`: move focus on the home screen
+- `Tab` / `Shift+Tab` / `Up` / `Down` / `j` / `k`: move focus on the home screen
 - `1` / `2` / `3` / `4` / `5`: jump to mode, length, language, theme, or start
 - `Enter`: open a picker, confirm a picker choice, start from the `start` row, or retry
 - `Up` / `Down`: move inside an open picker
@@ -76,8 +76,8 @@ history_limit = 20
 [keybindings]
 quit = ["q"]
 start = ["enter"]
-focus_next = ["tab", "down"]
-focus_previous = ["shift+tab", "up"]
+focus_next = ["tab", "down", "j"]
+focus_previous = ["shift+tab", "up", "k"]
 cycle_next = ["right", "l"]
 cycle_previous = ["left", "h"]
 picker_next = ["down", "j"]
